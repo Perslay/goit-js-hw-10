@@ -1,24 +1,22 @@
 import axios from 'axios';
 import Notiflix from 'notiflix';
-// import SlimSelect from 'slim-select'
 
 export const selectInput = document.querySelector('.breed-select');
+const cats = [];
 
 export const fetchBreeds = () => {
   axios.defaults.headers.common['x-api-key'] =
     'live_E41oW7TQeyZPbpWGQQHegvg3I5o2ZS6Oik46a7C42PktGiUWsKCBBexsIii8F6Xa';
 
-  axios
+  return axios
     .get('https://api.thecatapi.com/v1/breeds')
     .then(response => {
-      response.data.map(cat => {
-        selectInput.insertAdjacentHTML(
-          'beforeend',
-          `<option value="${cat.id}">${cat.name}</option>`
-        );
+      response.data.map(({ id, name }) => {
+        cats.push({ text: name, value: id });
       });
+      return cats;
     })
-    .catch(error => {
+    .catch(() => {
       Notiflix.Notify.failure('Something went wrong. Try reloading the page!');
     });
 };
@@ -29,7 +27,7 @@ export const fetchCatByBreed = breedId => {
     .then(response => {
       return response.data;
     })
-    .catch(error => {
-      console.log(error);
+    .catch(() => {
+      Notiflix.Notify.failure('Something went wrong. Try reloading the page!');
     });
 };
